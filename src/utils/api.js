@@ -8,7 +8,7 @@ axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 axios.defaults.withCredentials = true;
 
-export const fetchaccommodationsData = async () => {
+export const fetchAccommodationsData = async () => {
   try {
     const response = await client.get("/test/accommodation");
     return response.data;

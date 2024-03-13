@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from 'react'
 // import { Row, Col } from 'react-bootstrap'
 
-import { fetchaccommodationsData } from '../utils/api';
+import { fetchAccommodationsData } from '../utils/api';
+import { getAmenitiesFilters } from '../utils/helpers';
 import Accommodation from '../components/Accommodation'
 import AmenitiesFilter from '../components/AmenitiesFilter'
 
 export default function AccommodationPage() {
 
-  const [amenities, setAmenities] = useState({})
-  const [accommodationsData, setaccommodationsData] = useState([])
+  const [amenities, setAmenities] = useState([])
+  const [accommodationsData, setAccommodationsData] = useState([])
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const accommodations = await fetchaccommodationsData();
-        setaccommodationsData(accommodations);
+        const data = await fetchAccommodationsData();
+        setAccommodationsData(data);
+        setIsLoading(false);
       } catch (error) {
-        console.log("Error fetching data:", error);
+        console.error("Error fetching accommodations data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -27,15 +32,23 @@ export default function AccommodationPage() {
     <>
       <h1>Accommodations</h1>
 
-      <AmenitiesFilter callback={setAmenities} accommodations={accommodationsData} />
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : accommodationsData && (
+        <>
+          <div className='filters-wrapper'>
+            <AmenitiesFilter callback={setAmenities} initialAmenities={getAmenitiesFilters(accommodationsData)} />
+          </div>
 
-      <div className='accommodations-wrapper'>
-      {
-        accommodationsData.map((accommodation, index) =>
-            <Accommodation key={index} {...accommodation} filter={amenities} />
-        )
-      }
-      </div>
+          <div className='accommodations-wrapper'>
+          {
+            accommodationsData.map((accommodation, index) =>
+                <Accommodation key={index} {...accommodation} filter={amenities} />
+            )
+          }
+          </div>
+        </>
+      )}
     </>
   )
 }

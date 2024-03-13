@@ -1,15 +1,13 @@
 import React, { useState } from 'react'
 import { Card, Button } from 'react-bootstrap'
-
 import AmenityList from './AmenityList'
 import Price from './Price'
-
 
 export default function Accommodation(props) {
 
   const [showInfo, setShowInfo] = useState(false)
 
-  const showCard = checkAmenities(props.filter, props.amenities)
+  const showCard = checkAmenities(props.filter, props.amenities);
 
   function checkAmenities(selectedAmenities, includedAmenities) {
     return Object.entries(selectedAmenities)
